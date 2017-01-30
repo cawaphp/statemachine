@@ -1,0 +1,30 @@
+{
+    "name": "cawaphp/statemachine",
+    "description": "Сáша StateMachine",
+    "keywords": [
+        "cawa",
+        "statemachine"
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "tchiotludo"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cawa\\StateMachine\\": "src"
+        }
+    },
+    "require": {
+        "php": "~7.0",
+        "cawaphp/cawa" : "dev-master",
+        "clue/graph": "^0.9.0",
+        "graphp/graphviz": "^0.2.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.5"
+    }
+}
