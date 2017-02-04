@@ -17,6 +17,8 @@ use Cawa\StateMachine\Exceptions\InvalidCondition;
 
 class Transition
 {
+    use ConditionsTrait;
+
     /**
      * @param string $to
      * @param Condition[] $conditions
@@ -61,33 +63,6 @@ class Transition
     public function setFrom(State $from) : Transition
     {
         $this->from = $from;
-
-        return $this;
-    }
-
-    /**
-     * @var array|Condition[]
-     */
-    private $conditions = [];
-
-    /**
-     * @return array|Condition[]
-     */
-    public function getConditions()
-    {
-        return $this->conditions;
-    }
-
-    /**
-     * @param Condition $condition
-     *
-     * @return $this|self
-     */
-    public function addCondition(Condition $condition) : self
-    {
-        $condition->setTransition($this);
-
-        $this->conditions[] = $condition;
 
         return $this;
     }

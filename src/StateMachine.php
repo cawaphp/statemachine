@@ -129,6 +129,14 @@ class StateMachine
             throw new MissingState($this->getCurrentState(), $stateName);
         }
 
+        $from = $this->getCurrentState();
+        self::instanceDispatcher()->emit(new Event(
+            'state.before',
+            $from,
+            $this->states[$stateName],
+            $this->subject
+        ));
+
         try {
             if (!$this->getCurrentState()->can($stateName)) {
                 return false;
@@ -142,15 +150,6 @@ class StateMachine
                 throw $exception;
             }
         }
-
-        $from = $this->getCurrentState();
-
-        self::instanceDispatcher()->emit(new Event(
-            'state.before',
-            $from,
-            $this->states[$stateName],
-            $this->subject
-        ));
 
         $this->currentState = $this->states[$stateName];
 

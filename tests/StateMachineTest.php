@@ -34,6 +34,7 @@ class StateMachineTest extends TestCase
     const STATUS_CONFIRMED = 'CONFIRMED';
     const STATUS_READY = 'READY';
     const STATUS_PROCESSED = 'PROCESSED';
+    const STATUS_SENT = 'SENT';
     const STATUS_CANCELED = 'CANCELED';
     const STATUS_RETURN = 'RETURN';
 
@@ -87,7 +88,17 @@ class StateMachineTest extends TestCase
         );
 
         $stateMachine
-            ->addState(new State(self::STATUS_PROCESSED))
+            ->addState((new State(self::STATUS_PROCESSED))
+                ->addTransition(new Transition(self::STATUS_SENT))
+            );
+
+
+        $stateMachine
+            ->addState((new State(self::STATUS_SENT))
+                ->addCondition($returnFalse)
+            );
+
+        $stateMachine
             ->addState(new State(self::STATUS_CANCELED))
             ->addState(new State(self::STATUS_RETURN));
 
@@ -217,6 +228,10 @@ class StateMachineTest extends TestCase
                 self::STATUS_READY,
                 self::STATUS_CONFIRMED,
             ],
+            [
+                self::STATUS_PROCESSED,
+                self::STATUS_SENT,
+            ],
         ];
     }
 
@@ -270,6 +285,10 @@ class StateMachineTest extends TestCase
             [
                 self::STATUS_READY,
                 [self::STATUS_PROCESSED, self::STATUS_RETURN],
+            ],
+            [
+                self::STATUS_PROCESSED,
+                [],
             ],
         ];
     }

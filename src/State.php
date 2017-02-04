@@ -13,12 +13,15 @@ declare (strict_types = 1);
 
 namespace Cawa\StateMachine;
 
+use Cawa\StateMachine\Exceptions\InvalidCondition;
 use Cawa\StateMachine\Exceptions\InvalidTransition;
 use Cawa\StateMachine\Exceptions\MissingTransition;
 use Cawa\StateMachine\Exceptions\StateMachineException;
 
 class State
 {
+    use ConditionsTrait;
+
     /**
      * @param string $name
      */
@@ -103,6 +106,25 @@ class State
     }
 
     /**
+     * @param State $state
+     */
+    private function analyseStateConditions(State $state)
+    {
+        $subject = $this->getStateMachine()->getSubject();
+
+        foreach ($state->getConditions() as $condition) {
+            $clone = clone $condition;
+               $clone->setTransition((new Transition($state->getName(), [$clone]))
+                   ->setFrom($this->getStateMachine()->getCurrentState())
+               );
+
+            if (!$clone($subject)) {
+                throw new InvalidCondition($clone);
+            }
+        }
+    }
+
+    /**
      * @param string $stateName
      *
      * @return bool
@@ -112,6 +134,8 @@ class State
         if (!$this->hasTransition($stateName)) {
             throw new MissingTransition($this, $stateName);
         }
+
+        $this->analyseStateConditions($this->stateMachine->getStates()[$stateName]);
 
         try {
             return $this->transitions[$stateName]->can();
@@ -130,6 +154,10 @@ class State
         foreach ($this->transitions as $transition) {
             try {
                 $can = $transition->can();
+
+                $toState = $this->stateMachine->getStates()[$transition->getTo()];
+                $this->analyseStateConditions($toState);
+
             } catch (StateMachineException $exception) {
                 $can = false;
             }
