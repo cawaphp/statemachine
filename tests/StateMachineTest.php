@@ -16,7 +16,6 @@ declare (strict_types=1);
  *
  * @author tchiotludo <http://github.com/tchiotludo>
  */
-
 namespace CawaTest\StateMachine;
 
 use Cawa\StateMachine\Condition;
@@ -62,20 +61,20 @@ class StateMachineTest extends TestCase
         );
 
         $returnTrue = new class extends Condition
-        {
-            public function __invoke($subject) : bool
-            {
-                return true;
-            }
-        };
+ {
+     public function __invoke($subject) : bool
+     {
+         return true;
+     }
+ };
 
         $returnFalse = new class extends Condition
-        {
-            public function __invoke($subject) : bool
-            {
-                return false;
-            }
-        };
+ {
+     public function __invoke($subject) : bool
+     {
+         return false;
+     }
+ };
 
         $stateMachine->addState((new State(self::STATUS_READY))
             ->addTransition((new Transition(self::STATUS_CONFIRMED))
@@ -91,7 +90,6 @@ class StateMachineTest extends TestCase
             ->addState((new State(self::STATUS_PROCESSED))
                 ->addTransition(new Transition(self::STATUS_SENT))
             );
-
 
         $stateMachine
             ->addState((new State(self::STATUS_SENT))
@@ -132,8 +130,7 @@ class StateMachineTest extends TestCase
 
         $stateMachine->instanceDispatcher()->addListener(
             'state.before',
-            function (Event $event) use ($stateMachine, $initial, $to)
-            {
+            function (Event $event) use ($stateMachine, $initial, $to) {
                 $this->assertInstanceOf(\stdClass::class, $event->getSubject());
                 $this->assertEquals($event->getFrom()->getName(), $initial);
                 $this->assertEquals($event->getTo()->getName(), $to);
@@ -143,8 +140,7 @@ class StateMachineTest extends TestCase
 
         $stateMachine->instanceDispatcher()->addListener(
             'state.after',
-            function (Event $event) use ($stateMachine, $initial, $to)
-            {
+            function (Event $event) use ($stateMachine, $initial, $to) {
                 $this->assertEquals($event->getFrom()->getName(), $initial);
                 $this->assertEquals($event->getTo()->getName(), $to);
                 $this->assertEquals($stateMachine->getCurrentState()->getName(), $to);
@@ -293,4 +289,34 @@ class StateMachineTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $initial
+     * @param array $to
+     *
+     * @dataProvider possibleTransitionsWithoutConditions
+     */
+    public function testPossibleTransitionsWithoutConditions(string $initial, array $to)
+    {
+        $stateMachine = $this->getStateMachine($initial);
+        $transitions = [];
+        foreach ($stateMachine->getCurrentState()->getPossibleTransitions(false) as $transition) {
+            $transitions[] = $transition->getTo();
+        }
+
+        $this->assertEquals($to, $transitions);
+        $this->assertEquals($to, $stateMachine->getPossibleTransitions(false));
+    }
+
+    /**
+     * @return array
+     */
+    public function possibleTransitionsWithoutConditions()
+    {
+        return [
+            [
+                self::STATUS_READY,
+                [self::STATUS_CONFIRMED, self::STATUS_PROCESSED, self::STATUS_RETURN],
+            ],
+        ];
+    }
 }

@@ -60,7 +60,6 @@ class GraphBuilder
             $labelParts[] = 'if (' . (new \ReflectionClass($condition))->getShortName() . ')';
         }
 
-
         $label = implode(PHP_EOL, $labelParts);
 
         return $label;
