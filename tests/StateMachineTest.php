@@ -293,4 +293,34 @@ class StateMachineTest extends TestCase
         ];
     }
 
+    /**
+     * @param string $initial
+     * @param array $to
+     *
+     * @dataProvider possibleTransitionsWithoutConditions
+     */
+    public function testPossibleTransitionsWithoutConditions(string $initial, array $to)
+    {
+        $stateMachine = $this->getStateMachine($initial);
+        $transitions = [];
+        foreach ($stateMachine->getCurrentState()->getPossibleTransitions(false) as $transition) {
+            $transitions[] = $transition->getTo();
+        }
+
+        $this->assertEquals($to, $transitions);
+        $this->assertEquals($to, $stateMachine->getPossibleTransitions(false));
+    }
+
+    /**
+     * @return array
+     */
+    public function possibleTransitionsWithoutConditions()
+    {
+        return [
+            [
+                self::STATUS_READY,
+                [self::STATUS_CONFIRMED, self::STATUS_PROCESSED, self::STATUS_RETURN],
+            ],
+        ];
+    }
 }

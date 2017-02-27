@@ -164,12 +164,14 @@ class StateMachine
     }
 
     /**
-     * @return string[]
+     * @param bool $analyseConditions
+     *
+     * @return array|\string[]
      */
-    public function getPossibleTransitions() : array
+    public function getPossibleTransitions(bool $analyseConditions = true) : array
     {
         $return = [];
-        foreach ($this->getCurrentState()->getPossibleTransitions() as $transition) {
+        foreach ($this->getCurrentState()->getPossibleTransitions($analyseConditions) as $transition) {
             $return[] = $transition->getTo();
         }
 

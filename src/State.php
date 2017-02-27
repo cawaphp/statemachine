@@ -145,19 +145,23 @@ class State
     }
 
     /**
+     * @param bool $analyseConditions
+     *
      * @return array|Transition[]
      */
-    public function getPossibleTransitions() : array
+    public function getPossibleTransitions(bool $analyseConditions = true) : array
     {
         $return = [];
 
         foreach ($this->transitions as $transition) {
             try {
-                $can = $transition->can();
-
-                $toState = $this->stateMachine->getStates()[$transition->getTo()];
-                $this->analyseStateConditions($toState);
-
+                if ($analyseConditions) {
+                    $can = $transition->can();
+                    $toState = $this->stateMachine->getStates()[$transition->getTo()];
+                    $this->analyseStateConditions($toState);
+                } else {
+                    $can = true;
+                }
             } catch (StateMachineException $exception) {
                 $can = false;
             }
