@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-declare (strict_types=1);
+declare(strict_types = 1);
 
 /**
- * Сáша frameworks tests
+ * Сáша frameworks tests.
  *
  * @author tchiotludo <http://github.com/tchiotludo>
  */
+
 namespace CawaTest\StateMachine;
 
 use Cawa\StateMachine\Condition;
@@ -60,21 +61,19 @@ class StateMachineTest extends TestCase
             ->addTransition(new Transition(self::STATUS_READY))
         );
 
-        $returnTrue = new class extends Condition
- {
-     public function __invoke($subject) : bool
-     {
-         return true;
-     }
- };
+        $returnTrue = new class() extends Condition {
+            public function __invoke($subject) : bool
+            {
+                return true;
+            }
+        };
 
-        $returnFalse = new class extends Condition
- {
-     public function __invoke($subject) : bool
-     {
-         return false;
-     }
- };
+        $returnFalse = new class() extends Condition {
+            public function __invoke($subject) : bool
+            {
+                return false;
+            }
+        };
 
         $stateMachine->addState((new State(self::STATUS_READY))
             ->addTransition((new Transition(self::STATUS_CONFIRMED))
