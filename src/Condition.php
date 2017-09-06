@@ -41,6 +41,30 @@ abstract class Condition
     }
 
     /**
+     * @var string
+     */
+    private $label;
+
+    /**
+     * @return string
+     */
+    public function getLabel() : ?string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return self|$this
+     */
+    public function setLabel(string $label = null) : self
+    {
+        $this->label = $label;
+        return $this;
+    }
+
+    /**
      * @param object $subject
      *
      * @return bool

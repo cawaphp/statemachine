@@ -40,6 +40,12 @@ class GraphBuilder
         $stateName = $state->getName();
         $vertex = $this->graph->createVertex($stateName, true);
 
+        if ($state->getLabel()) {
+            $vertex->setAttribute('graphviz.label', $state->getLabel());
+        }
+
+        $vertex->setAttribute('graphviz.fontsize', "11");
+
         return $vertex;
     }
 
@@ -57,7 +63,11 @@ class GraphBuilder
 
         $labelParts = [];
         foreach ($transition->getConditions() as $condition) {
-            $labelParts[] = 'if (' . (new \ReflectionClass($condition))->getShortName() . ')';
+            if ($condition->getLabel()) {
+                $labelParts[] = $condition->getLabel();
+            } else {
+                $labelParts[] = 'if (' . (new \ReflectionClass($condition))->getShortName() . ')';
+            }
         }
 
         $label = implode(PHP_EOL, $labelParts);
@@ -77,6 +87,9 @@ class GraphBuilder
         $label = $this->getTransitionLabel($state, $transition);
         if ($label) {
             $edge->setAttribute('graphviz.label', $label);
+            $edge->setAttribute('graphviz.style', 'dashed');
+            $edge->setAttribute('graphviz.fontcolor', "darkgrey");
+            $edge->setAttribute('graphviz.fontsize', "10");
         }
     }
 

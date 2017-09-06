@@ -44,6 +44,30 @@ class State
     }
 
     /**
+     * @var string
+     */
+    private $label;
+
+    /**
+     * @return string
+     */
+    public function getLabel() : ?string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return self|$this
+     */
+    public function setLabel(string $label = null) : self
+    {
+        $this->label = $label;
+        return $this;
+    }
+
+    /**
      * @var StateMachine
      */
     private $stateMachine;
@@ -59,9 +83,9 @@ class State
     /**
      * @param StateMachine $stateMachine
      *
-     * @return State
+     * @return self|$this
      */
-    public function setStateMachine(StateMachine $stateMachine) : State
+    public function setStateMachine(StateMachine $stateMachine) : self
     {
         $this->stateMachine = $stateMachine;
 
