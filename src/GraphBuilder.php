@@ -44,7 +44,7 @@ class GraphBuilder
             $vertex->setAttribute('graphviz.label', $state->getLabel());
         }
 
-        $vertex->setAttribute('graphviz.fontsize', "11");
+        $vertex->setAttribute('graphviz.fontsize', '11');
 
         return $vertex;
     }
@@ -88,8 +88,8 @@ class GraphBuilder
         if ($label) {
             $edge->setAttribute('graphviz.label', $label);
             $edge->setAttribute('graphviz.style', 'dashed');
-            $edge->setAttribute('graphviz.fontcolor', "darkgrey");
-            $edge->setAttribute('graphviz.fontsize', "10");
+            $edge->setAttribute('graphviz.fontcolor', 'darkgrey');
+            $edge->setAttribute('graphviz.fontsize', '10');
         }
     }
 

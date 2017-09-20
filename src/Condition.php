@@ -61,6 +61,7 @@ abstract class Condition
     public function setLabel(string $label = null) : self
     {
         $this->label = $label;
+
         return $this;
     }
 
