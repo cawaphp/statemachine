@@ -25,7 +25,7 @@ use Cawa\StateMachine\Exceptions\StateMachineException;
 use Cawa\StateMachine\State;
 use Cawa\StateMachine\StateMachine;
 use Cawa\StateMachine\Transition;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 class StateMachineTest extends TestCase
 {
