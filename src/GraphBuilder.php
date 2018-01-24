@@ -22,6 +22,11 @@ class GraphBuilder
     private $graph;
 
     /**
+     * @var StateMachine
+     */
+    private $stateMachine;
+
+    /**
      * @param Graph $graph
      */
     public function __construct(Graph $graph)
@@ -57,12 +62,16 @@ class GraphBuilder
      */
     protected function getTransitionLabel(State $state, Transition $transition)
     {
-        if (sizeof($transition->getConditions()) == 0) {
+        $mergeConditions = array_merge($this->stateMachine->getStates()[$transition->getTo()]->getConditions(), $transition->getConditions());
+
+        if (sizeof($mergeConditions) == 0) {
             return null;
         }
 
         $labelParts = [];
-        foreach ($transition->getConditions() as $condition) {
+
+        /** @var Condition[] $mergeConditions */
+        foreach ($mergeConditions as $condition) {
             if ($condition->getLabel()) {
                 $labelParts[] = $condition->getLabel();
             } else {
@@ -82,7 +91,7 @@ class GraphBuilder
     protected function addTransition(State $state, Transition $transition)
     {
         $sourceStateVertex = $this->createStatusVertex($state);
-        $targetStateVertex = $this->createStatusVertex(new State($transition->getTo()));
+        $targetStateVertex = $this->createStatusVertex($this->stateMachine->getStates()[$transition->getTo()]);
         $edge = $sourceStateVertex->createEdgeTo($targetStateVertex);
         $label = $this->getTransitionLabel($state, $transition);
         if ($label) {
@@ -109,7 +118,9 @@ class GraphBuilder
      */
     public function addStateMachine(StateMachine $stateMachine)
     {
-        foreach ($stateMachine->getStates() as $state) {
+        $this->stateMachine = $stateMachine;
+
+        foreach ($this->stateMachine->getStates() as $state) {
             $this->addState($state);
         }
     }
